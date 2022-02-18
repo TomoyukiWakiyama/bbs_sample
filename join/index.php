@@ -1,3 +1,27 @@
+<?php
+  // 変数の初期化
+  $form = [
+    'name' => '',
+  ];
+  $error = [];
+
+  // ファンクション作成
+  function h($value){
+    return  htmlspecialchars($value, ENT_QUOTES);
+  }
+
+  // フォームが送信されたか判断する
+  if($_SERVER['REQUEST_METHOD'] === 'POST'):
+    // 空白除去
+    $form['name'] = preg_replace( '/\A[\p{C}\p{Z}]++|[\p{C}\p{Z}]++\z/u', '', $_POST['name']);
+    if(empty($form['name'])){
+      $error['name'] = 'blank';
+    }
+  endif;
+  
+  
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -22,8 +46,10 @@
             <dl>
                 <dt>ニックネーム<span class="required">必須</span></dt>
                 <dd>
-                    <input type="text" name="name" size="35" maxlength="255" value=""/>
-                    <p class="error">* ニックネームを入力してください</p>
+                    <input type="text" name="name" size="35" maxlength="255" value="<?php echo h($form['name']); ?>"/>
+                    <?php if(isset($error['name']) && $error['name'] === 'blank'): ?>
+                      <p class="error">* ニックネームを入力してください</p>
+                    <?php endif; ?>
                 </dd>
                 <dt>メールアドレス<span class="required">必須</span></dt>
                 <dd>
